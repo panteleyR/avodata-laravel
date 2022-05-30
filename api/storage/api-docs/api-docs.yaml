@@ -1,0 +1,503 @@
+openapi: 3.0.0
+info:
+  title: 'Pixel Api'
+  version: 1.0.0
+paths:
+  /api/users/me:
+    get:
+      summary: 'Текущий пользователь'
+      operationId: 'App\Http\Controllers\AuthController::user'
+      responses:
+        200:
+          description: 'successful operation'
+        500:
+          description: 'Не авторизован'
+  /api/login:
+    post:
+      summary: Логин
+      operationId: 'App\Http\Controllers\AuthController::login'
+      parameters:
+        -
+          name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful operation'
+  /api/logout:
+    post:
+      summary: 'Выход из пользователя'
+      operationId: 'App\Http\Controllers\AuthController::logout'
+      responses:
+        200:
+          description: 'successful operation'
+  /api/register:
+    post:
+      summary: Регистрация
+      operationId: 'App\Http\Controllers\AuthController::register'
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful operation'
+  /api/confirm/auth/mail-again:
+    post:
+      summary: 'Выслать код подтверждения email снова'
+      operationId: 'App\Http\Controllers\AuthController::confirmEmailCodeAgain'
+      parameters:
+        -
+          name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+  /api/confirm/auth/mail:
+    post:
+      summary: 'Подтверждение email'
+      operationId: 'App\Http\Controllers\AuthController::confirmEmail'
+      parameters:
+        -
+          name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+  /api/confirm/auth/restore:
+    post:
+      summary: 'Сброс пароля'
+      operationId: 'App\Http\Controllers\AuthController::restore'
+      parameters:
+        -
+          name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful operation'
+  /api/confirm/auth/restore-again:
+    post:
+      summary: 'Заново отправить код на сброс пароля'
+      operationId: 'App\Http\Controllers\AuthController::confirmRestoreCodeAgain'
+      parameters:
+        -
+          name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+  /api/cabinets:
+    get:
+      summary: 'Список кабинетов'
+      operationId: 'App\Http\Controllers\CabinetController::index'
+      responses:
+        200:
+          description: 'successful operation'
+        403:
+          description: Forbidden
+    post:
+      summary: 'Добавить кабинет'
+      operationId: 'App\Http\Controllers\CabinetController::store'
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: amount
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful operation'
+  '/api/cabinets/{cabinetId}':
+    get:
+      summary: 'Посмотреть кабинет'
+      operationId: 'App\Http\Controllers\CabinetController::show'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+    put:
+      summary: 'Обновить кабинетов'
+      operationId: 'App\Http\Controllers\CabinetController::update'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: amount
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful operation'
+  '/api/cabinets/{cabinetId}/domains':
+    get:
+      summary: 'Список доменов текущего кабинета'
+      operationId: 'App\Http\Controllers\DomainController::index'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+        401:
+          description: 'Unauthorized user'
+        403:
+          description: Forbidden
+        422:
+          description: 'Invalid Data'
+        500:
+          description: 'Application Error'
+    put:
+      summary: 'Добавить домен'
+      operationId: 'App\Http\Controllers\DomainController::store'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: domain
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful operation'
+        403:
+          description: 'You are not the Admin'
+  '/api/cabinets/{cabinetId}/domains/{id}':
+    get:
+      summary: 'Конкретный домен'
+      operationId: 'App\Http\Controllers\DomainController::show'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+    put:
+      summary: 'Обновить домен'
+      operationId: 'App\Http\Controllers\DomainController::update'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: domain
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: 'on'
+          in: query
+          required: true
+          schema:
+            type: bool
+        -
+          name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful operation'
+        403:
+          description: Forbidden
+    delete:
+      summary: 'Удалить домен'
+      operationId: 'App\Http\Controllers\DomainController::destroy'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+        403:
+          description: Forbidden
+  '/api/cabinets/{cabinetId}/members/me':
+    get:
+      summary: 'Текущий сотрудник'
+      operationId: 'App\Http\Controllers\MemberController::currentMember'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+  '/api/cabinets/{cabinetId}/members':
+    get:
+      summary: 'Все сотрудники'
+      operationId: 'App\Http\Controllers\MemberController::index'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+    post:
+      summary: 'Добавить сотрудника'
+      operationId: 'App\Http\Controllers\MemberController::store'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: password
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: roleId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+        403:
+          description: Forbidden
+  '/api/cabinets/{cabinetId}/members/{id}':
+    get:
+      summary: 'Посмотреть сотрудника'
+      operationId: 'App\Http\Controllers\MemberController::show'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+    put:
+      summary: 'Обновить сотрудника'
+      operationId: 'App\Http\Controllers\MemberController::update'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: roleId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+        403:
+          description: Forbidden
+    delete:
+      summary: 'Удалить сотрудника'
+      operationId: 'App\Http\Controllers\MemberController::destroy'
+      parameters:
+        -
+          name: cabinetId
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'successful operation'
+        403:
+          description: Forbidden
+  /api/roles:
+    get:
+      summary: 'Список ролей'
+      operationId: 'App\Http\Controllers\RoleController::index'
+      responses:
+        200:
+          description: 'successful operation'
+  /api/users/me/change-password:
+    post:
+      summary: 'Список кабинетов'
+      operationId: 'App\Http\Controllers\UserController::changePassword'
+      parameters:
+        -
+          name: passwordOld
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: passwordNew
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful operation'
+        500:
+          description: 'Invalid creditionals'
+security:
+  - []

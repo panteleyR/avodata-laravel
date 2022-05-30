@@ -1,0 +1,1364 @@
+openapi: 3.0.0
+info:
+  title: 'Avodata Api v1'
+  version: 1.0.0
+paths:
+  /api/v1/register:
+    post:
+      description: 'Регистрация нового пользователя'
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: password
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'user_id': 1
+              }
+        422:
+          description: 'invalid data'
+
+  /api/v1/confirm/auth/mail:
+    post:
+      summary: 'Подтверждение почты'
+      parameters:
+        -
+          name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                         'name', 'email', 'email_verified_at'
+              }
+        422:
+          description: 'invalid data'
+          content:
+            application/json:
+              example: {
+                appCode: 4001
+              }
+
+  /api/v1/confirm/auth/mail-again:
+    post:
+      summary: 'Повторно запросить код подтверждения почты'
+      parameters:
+        -
+          name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'userId': 1
+              }
+        422:
+          description: 'invalid data'
+  /api/v1/restore:
+    post:
+      summary: 'Подтвердить пароль'
+      parameters:
+        -
+          name: email
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'userId': 1
+              }
+        422:
+          description: 'Неверные данные'
+  /api/v1/confirm/auth/restore:
+    post:
+      summary: 'Подтвердить восстановление пароля'
+      parameters:
+        -
+          name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+        -
+          name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: password
+          in: query
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'user': {
+                          'name', 'email', 'email_verified_at'
+                }
+              }
+        422:
+          description: 'invalid data'
+  /api/v1/confirm/auth/restore-again:
+    post:
+      summary: 'Повторно запросить код подтверждения восстановления пароля'
+      parameters:
+        -
+          name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'userId': 1
+              }
+        422:
+          description: 'invalid data'
+  /api/v1/login:
+    post:
+      summary: 'Вход'
+      parameters:
+        -
+          name: email
+          required: true
+          in: query
+          schema:
+            type: string
+        -
+          name: password
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'user': {
+                  'name': 'string', 'email': 'string', 'email_verified_at': 'date'
+                },
+                'access_token': 'string'
+              }
+        422:
+          description: 'invalid data'
+  /api/v1/logout:
+    post:
+      summary: 'Выход'
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'You have been successfully logged out!'
+              }
+        401:
+          description: 'invalid user data'
+
+  /api/v1/cabinets:
+    get:
+      summary: 'Кабинеты'
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: [
+                {
+                  amount: 'integer',
+                  created_at: 'date',
+                  deleted_at: 'date',
+                  id: 'integer',
+                  name: 'string',
+                  updated_at: 'date'
+                }
+              ]
+    post:
+      summary: 'Добавить кабинет'
+      security:
+        - bearerAuth: []
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: amount/admin
+          in: query
+          required: false
+          schema:
+            type: number
+      responses:
+        201:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'string',
+                'cabinetId': 'integer'
+              }
+
+  /api/v1/geo/cities:
+    get:
+      summary: 'Список городов'
+      parameters:
+        -
+          name: search
+          required: false
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            applicaton/json:
+              example: [
+              {'cities'}
+              ]
+
+  /api/v1/users/me:
+    get:
+      summary: 'Текущий пользователь'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                created_at: 'date',
+                deleted_at: 'date',
+                email: 'string',
+                email_verified_at: 'date',
+                id: 'integer',
+                is_super_admin: 'integer',
+                name: 'string',
+                updated_at: 'date'
+              }
+
+  /api/v1/users/change-password:
+    post:
+      summary: 'Поменять пароль'
+      parameters:
+        -
+          name: passwordOld
+          required: true
+          in: query
+          schema:
+            type: string
+        -
+          name: passwordNew
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'string'
+              }
+        403:
+          description: 'Разные пароли'
+
+  /api/v1/roles:
+    get:
+      summary: 'Список ролей'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: [
+                {
+                  created_at: 'date',
+                  deleted_at: 'date',
+                  id: 'integer',
+                  name: 'string',
+                  updated_at: 'date'
+                }
+              ]
+
+  /api/v1/cabinet/1/:
+    get:
+      summary: 'Выбранный кабинет'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                amount: 'integer',
+                created_at: 'date',
+                deleted_at: 'date',
+                id: 'integer',
+                name: 'string',
+                updated_at: 'date'
+              }
+    put:
+      summary: 'Изменить кабинет'
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: amount/admin
+          in: query
+          required: false
+          schema:
+            type: number
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                amount: 'integer',
+                created_at: 'date',
+                deleted_at: 'date',
+                id: 'integer',
+                name: 'string',
+                updated_at: 'date'
+              }
+  /api/v1/cabinet/1/members/me:
+    get:
+      summary: 'Текущий пользователь кабинета'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                         'current member'
+              }
+
+  /api/v1/cabinet/1/members:
+    get:
+      summary: 'Пользователи кабинета'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: [
+                {
+                  cabinet_id: 'integer',
+                  created_at: 'date',
+                  id: 'integer',
+                  role: {
+                    created_at: 'date',
+                    deleted_at: 'date',
+                    id: 'integer',
+                    name: 'string',
+                    updated_at: 'date'
+                  },
+                  role_id: 'integer',
+                  updated_at: 'date',
+                  user: {
+                    created_at: 'date',
+                    deleted_at: 'date',
+                    email: 'string',
+                    email_verified_at: 'date',
+                    id: 'integer',
+                    is_super_admin: 'integer',
+                    name: 'string',
+                    updated_at: 'date'
+                  },
+                  user_id: 'integer'
+                }
+              ]
+    post:
+      summary: 'Добавить нового пользователя в кабинет'
+      parameters:
+        -
+          name: email
+          required: true
+          in: query
+          schema:
+            type: string
+        -
+          name: roleId
+          required: true
+          in: query
+          schema:
+            type: integer
+      responses:
+        201:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'string',
+                'memberId': 'integer'
+              }
+        403:
+          description: 'Не достаточно прав'
+        422:
+          description: 'Пользователь уже создан'
+
+
+  /api/v1/cabinet/1/members/1:
+    get:
+      summary: 'Пользователь кабинета'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                cabinet_id: 'integer',
+                created_at: 'date',
+                id: 'integer',
+                role: {
+                  created_at: 'date',
+                  deleted_at: 'date',
+                  id: 'integer',
+                  name: 'string',
+                  updated_at: 'date'
+                },
+                role_id: 'integer',
+                updated_at: 'date',
+                user: {
+                  created_at: 'date',
+                  deleted_at: 'date',
+                  email: 'string',
+                  email_verified_at: 'date',
+                  id: 'integer',
+                  is_super_admin: 'integer',
+                  name: 'string',
+                  updated_at: 'date'
+                },
+                user_id: 'integer'
+              }
+    put:
+      summary: 'Редактирование пользователя кабинета'
+      parameters:
+        -
+          name: roleId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                cabinet_id: 'integer',
+                created_at: 'date',
+                id: 'integer',
+                role: {
+                  created_at: 'date',
+                  deleted_at: 'date',
+                  id: 'integer',
+                  name: 'string',
+                  updated_at: 'date'
+                },
+                role_id: 'integer',
+                updated_at: 'date',
+                user: {
+                  created_at: 'date',
+                  deleted_at: 'date',
+                  email: 'string',
+                  email_verified_at: 'date',
+                  id: 'integer',
+                  is_super_admin: 'integer',
+                  name: 'string',
+                  updated_at: 'date'
+                },
+                user_id: 'integer'
+              }
+        403:
+          description: 'Нет достаточных прав'
+    delete:
+      summary: 'Удалить пользователя из кабинета'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                cabinet_id: 'integer',
+                created_at: 'date',
+                id: 'integer',
+                role_id: 'integer',
+                updated_at: 'date',
+                user_id: 'integer'
+              }
+        403:
+          description: 'Нет достаточных прав'
+
+  /api/v1/cabinet/1/domains:
+    get:
+      summary: 'Список доменов'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: [
+                {
+                  api_url: 'string',
+                  cabinet_id: 'integer',
+                  created_at: 'date',
+                  deleted_at: 'date',
+                  domain: 'string',
+                  geo_on: 'integer',
+                  id: 'integer',
+                  js_after: 'string',
+                  js_before: 'string',
+                  name: 'string',
+                  on: 'integer',
+                  token: 'string',
+                  updated_at: 'date'
+                }
+              ]
+    post:
+      summary: 'Добавить домен'
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: domain
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'string',
+                'domainId': 'integer'
+              }
+
+  /api/v1/cabinet/1/domains/1:
+    get:
+      summary: 'Доменов'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                api_url: 'string',
+                cabinet_id: 'integer',
+                created_at: 'date',
+                deleted_at: 'date',
+                domain: 'string',
+                geo_on: 'integer',
+                geo: [],
+                id: 'integer',
+                js_after: 'string',
+                js_before: 'string',
+                name: 'string',
+                on: 'integer',
+                token: 'string',
+                updated_at: 'date'
+              }
+    put:
+      summary: 'Редактировать домен'
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: domain/admin
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: on
+          in: query
+          required: true
+          schema:
+            type: boolean
+        -
+          name: geo_on
+          in: query
+          required: true
+          schema:
+            type: boolean
+        -
+          name: token/admin
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: jsBefore
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: jsAfter
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: api_url
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: geo_cities
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                api_url: 'string',
+                cabinet_id: 'integer',
+                created_at: 'date',
+                deleted_at: 'date',
+                domain: 'string',
+                geo_on: 'integer',
+                geo: [],
+                id: 'integer',
+                js_after: 'string',
+                js_before: 'string',
+                name: 'string',
+                on: 'integer',
+                token: 'string',
+                updated_at: 'date'
+              }
+    delete:
+      summary: 'Удалить домен'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'string'
+              }
+        403:
+          description: 'Недостаточно прав'
+  /api/v1/cabinet/1/domain/1/campaigns:
+    get:
+      summary: 'Списпок компаний'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                [
+                  {
+                    id: 'integer',
+                    tariff: {},
+                    balance: 'integer',
+                    discount: 'float',
+                    from: 'date',
+                    to: 'date'
+                  }
+                ]
+    post:
+      summary: 'Добавить кампанию Админ'
+      responses:
+        201:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  id: 'integer'
+                }
+  /api/v1/cabinet/1/domain/1/campaigns/1:
+    get:
+      summary: 'Кампания'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  id: 'integer',
+                  tariff: {},
+                  balance: 'integer',
+                  discount: 'float',
+                  from: 'date',
+                  to: 'date'
+                }
+    put:
+      summary: 'Обновить кампанию Админ'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  message: 'ok'
+                }
+    delete:
+      summary: 'Удалить кампанию Админ'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  message: 'ok'
+                }
+
+  /api/v1/cabinet/1/domain/1/campaigns/1/payments:
+    get:
+      summary: 'Списпок платежек Админ'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                [
+                  {
+                    id: 'integer',
+                    arrival: 'float'
+                  }
+                ]
+    post:
+      summary: 'Добавить платеж Админ'
+      parameters:
+        - name: arrival
+          in: query
+          required: true
+          schema:
+            type: float
+      responses:
+        201:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  id: 'integer'
+                }
+  /api/v1/cabinet/1/domain/1/campaigns/1/payments/1:
+    get:
+      summary: 'Платеж Админ'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  id: 'integer',
+                  arrival: 'float'
+                }
+  /api/v1/tariffs:
+    get:
+      summary: 'Списпок тарифов'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                [
+                  {
+                    id: 'integer',
+                    name: 'string',
+                    price: 'float',
+                    contacts: 'integer'
+                  }
+                ]
+    post:
+      summary: 'Добавить тариф Админ'
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: price
+          in: query
+          required: true
+          schema:
+            type: float
+        - name: contacts
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  id: 'integer'
+                }
+  /api/v1/tariffs/1:
+    get:
+      summary: 'Тариф'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  id: 'integer',
+                  name: 'string',
+                  price: 'float',
+                  contacts: 'integer'
+                }
+    put:
+      summary: 'Обновить тариф Админ'
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: price
+          in: query
+          required: true
+          schema:
+            type: float
+        - name: contacts
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  message: 'ok'
+                }
+    delete:
+      summary: 'Удалить тариф Админ'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example:
+                {
+                  message: 'ok'
+                }
+
+
+  # SUPER ADMIN
+  /api/v1/cabinet/1/attach/provider/1:
+    patch:
+      summary: 'Добавить провайдера этому кабинету'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'ok'
+              }
+  /api/v1/cabinet/1/dettach/provider/1:
+    patch:
+      summary: 'Убрать провайдера из этого кабинета'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'ok'
+              }
+  /api/v1/domains:
+    get:
+      summary: 'Список всех домен'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                         'domains'
+              }
+  /api/v1/providers:
+    get:
+      summary: 'Список всех поставщика'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                         'providers'
+              }
+        403:
+          description: 'Недостаточно прав'
+    post:
+      summary: 'Добавить поставщика'
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: description
+          in: query
+          required: false
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'ok'
+              }
+        403:
+          description: 'Недостаточно прав'
+
+  /api/v1/providers/1:
+    put:
+      summary: 'Редактирование поставщика'
+      parameters:
+        -
+          name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        -
+          name: description
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: on
+          in: query
+          required: true
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'ok'
+              }
+        403:
+          description: 'Недостаточно прав'
+    delete:
+      summary: 'Удалить провайдера'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'message': 'ok'
+              }
+        403:
+          description: 'Недостаточно прав'
+  /px/v1/public/1/statistics:
+    get:
+      summary: 'Статистика по данному кабинету'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'sessions': 'integer',
+                'users': 'integer',
+                'sessionsMonthStatistics': [],
+                'usersMonthStatistics': []
+              }
+        403:
+          description: 'Недостаточно прав'
+  /px/v1/public/1/users:
+    get:
+      security:
+        - bearerAuth: []
+      summary: 'Клиенты данного кабинета'
+      parameters:
+        -
+          name: from
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: to
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: domainId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: [
+                {
+                  created_at: 'date',
+                  id: 'integer',
+                  updated_at: 'date',
+                  contacts: [
+                    {
+                      contacts_type_id: 'integer',
+                      created_at: 'date',
+                      domain_id: 'integer',
+                      id: 'integer',
+                      provider_id: 'integer',
+                      session_id: 'integer',
+                      updated_at: 'date',
+                      user_id: 'integer',
+                      value: 'string'
+                    }
+                  ]
+                }
+              ]
+        403:
+          description: 'Недостаточно прав'
+  /px/v1/public/1/users/1/sessions:
+    get:
+      summary: 'Сессии клиента'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: [
+                {
+                  api_data: 'string',
+                  cookie: 'string',
+                  created_at: 'date',
+                  domain: 'string',
+                  domain_id: 'integer',
+                  id: 'integer',
+                  ref: 'string',
+                  title: 'string',
+                  token: 'string',
+                  updated_at: 'date',
+                  url: 'string',
+                  user_id: 'integer'
+                }
+              ]
+        403:
+          description: 'Недостаточно прав'
+  /px/v1/admin/statistics:
+    get:
+      summary: 'Статистика'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'sessions': [],
+                'users': [],
+                'sessionsMonthStatistics': [],
+                'usersMonthStatistics': []
+              }
+        403:
+          description: 'Недостаточно прав'
+  /px/v1/admin/users:
+    get:
+      summary: 'Клиенты данного кабинета'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'users': []
+              }
+        403:
+          description: 'Недостаточно прав'
+  /px/v1/admin/users/1/sessions:
+    get:
+      summary: 'Сессии клиента'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'sessions': []
+              }
+        403:
+          description: 'Недостаточно прав'
+  /px/v1/admin/statistics/providers:
+    get:
+      summary:  'Статистика по поставщикам'
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                'providers': [],
+                'contacts': []
+              }
+  /px/pixel.js:
+    get:
+      summary:  'Вызов первичного скрипта'
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/javascript:
+              example: 'script'
+  /px/pixel2.js:
+    get:
+      summary:  'Вызов второго скрипта'
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: domain
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: url
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: ref
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: cookie
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Вызов скриптов поставщиков'
+          content:
+            application/javascript:
+              example: 'script'
+  /px/provider/run:
+    get:
+      summary:  'Проверяем, получили ли мы уже ответи от поставщика'
+      parameters:
+        - name: provider_id
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: session_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                status: 'string'
+              }
+  /px/webhook:
+    post:
+      summary:  'То куда поставщики присылают данные'
+      parameters:
+        - name: sid
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: yid
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: token
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: stock_key
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                message: 'string'
+              }
+  /px/aggregate:
+    get:
+      summary:  'Выборка с whatsapp'
+      parameters:
+        - name: phone
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: redirect
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/javascript:
+              example: 'location.replace();'
+  /px/v1/public/1/adjustment:
+    post:
+      summary:  'Корректировка номеров'
+      parameters:
+        - name: users
+          in: query
+          required: true
+          schema:
+            type: array
+      responses:
+        200:
+          description: 'success'
+          content:
+            application/json:
+              example: {
+                message: 'string'
+              }
+
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+security:
+  - bearerAuth: []         # use the same name as above

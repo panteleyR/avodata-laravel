@@ -1,0 +1,182 @@
+// =========================================================
+// * Vuetify Material Dashboard - v2.1.0
+// =========================================================
+//
+// * Product Page: https://www.creative-tim.com/product/vuetify-material-dashboard
+// * Copyright 2019 Creative Tim (https://www.creative-tim.com)
+//
+// * Coded by Creative Tim
+//
+// =========================================================
+//
+// * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+@font-face
+  font-family: "Roboto"
+  src: url("~static/fonts/Roboto-Thin.ttf")
+  font-weight: 100
+  font-style: normal
+@font-face
+  font-family: "Roboto"
+  src: url("~static/fonts/Roboto-Light.ttf")
+  font-weight: 300
+  font-style: normal
+@font-face
+  font-family: "Roboto"
+  src: url("~static/fonts/Roboto-Regular.ttf")
+  font-weight: 400
+  font-style: normal
+@font-face
+  font-family: "Roboto"
+  src: url("~static/fonts/Roboto-Medium.ttf")
+  font-weight: 500
+  font-style: normal
+@font-face
+  font-family: "Roboto"
+  src: url("~static/fonts/Roboto-Bold.ttf")
+  font-weight: 700
+  font-style: normal
+@font-face
+  font-family: "Roboto"
+  src: url("~static/fonts/Roboto-Black.ttf")
+  font-weight: 900
+  font-style: normal
+
+@import "variables.scss"
+@import "transitions.scss"
+
+// Creative Tim refine style code
+@import vuetify-material/sidebar
+@import vuetify-material/appbar
+@import vuetify-material/buttons
+@import vuetify-material/pagination
+@import vuetify-material/footer
+@import vuetify-material/view
+@import vuetify-material/settings
+@import vuetify-material/card
+@import vuetify-material/table
+@import vuetify-material/tab
+@import vuetify-material/notification
+@import vuetify-material/modal
+@import vuetify-material/map
+@import vuetify-material/chip
+
+body
+  background: linear-gradient(to right top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1590431306482-f700ee050c59?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80")
+  background-size: cover
+
+.v-btn.v-size--default,
+.v-btn.v-size--large
+  &:not(.v-btn--icon):not(.v-btn--fab)
+    padding: 0 30px !important
+
+.theme--light.v-list-item .v-list-item__action-text,
+.theme--light.v-list-item .v-list-item__subtitle
+  color: #999
+
+.theme--light.v-text-field>.v-input__control>.v-input__slot:before
+  border-color: #d2d2d2
+
+.v-label.v-label,
+.v-alert.v-alert
+  font-size: $font-size-root
+
+.theme--light .v-content
+  //background-color: #eee
+  background-color: #adb9bb3d
+.v-menu__content
+  background: white
+
+
+.landing
+  section
+    padding: 0 10%
+    .container
+      padding: 80px 0
+      h2
+        margin-bottom: 15px
+      .bolder
+        font-weight: bold
+      p.desc
+        width: 80%
+        margin-bottom: 30px
+  section.interface
+    img
+      box-shadow: 0 1px 15px 1px rgba(0,0,0,.04), 0 1px 6px rgba(0,0,0,.04)
+      width: 100%
+  section.works
+    .items
+      display: flex
+      justify-content: space-between
+      flex-wrap: wrap
+      .item
+        width: 45%
+        padding: 15px
+        border-radius: 10px
+        margin-bottom: 22.5px
+        box-shadow: 0 1px 15px 1px rgba(0,0,0,.04), 0 1px 6px rgba(0,0,0,.04)
+        display: flex
+        .ic
+          font-size: 80px
+        .title
+          font-size: 18px!important
+          font-weight: bold
+          margin-bottom: 7.5px
+        .text
+          color: #4f4f4f
+          margin-bottom: 7.5px
+      .item:hover
+        box-shadow: 0 10px 16px rgba(0,0,0,.2)
+
+  section.tariffs
+    background: #fafafa
+    //background: #ececec
+    h2
+      margin-bottom: 45px
+    .items
+      display: flex
+      justify-content: space-between
+      .item
+        background: white
+        width: 22%
+        padding: 15px
+        border-radius: 10px
+        box-shadow: 0 1px 15px 1px rgba(0,0,0,.04), 0 1px 6px rgba(0,0,0,.04)
+        .title
+          font-size: 18px!important
+          font-weight: bold
+          margin-bottom: 7.5px
+        .text
+          color: #4f4f4f
+          margin-bottom: 7.5px
+        .price
+          font-size: 16px
+          color: black
+      .item:hover
+        box-shadow: 0 10px 16px rgba(0,0,0,.2)
+
+  section.contacts
+    //background: #245515
+    background: url("/register.jpg")
+    padding: 20px 10%
+    display: flex
+    .container
+      display: flex
+    .first
+      width: 50%
+      background: white
+      border-radius: 10px
+      padding: 30px
+      box-shadow: 0 10px 16px rgba(0,0,0,.2)
+      p.desc
+        width: 100%
+    .second
+      width: 50%
+      max-width: 400px
+      display: flex
+      justify-content: center
+      img
+        width: 0
+        object-fit: contain
+      .ic
+        font-size: 240px

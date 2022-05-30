@@ -1,0 +1,64 @@
+image: php:7.4-fpm-buster
+
+stages:
+  - stage
+  - deploy
+
+Deploy:
+  stage: deploy
+  only:
+    - release
+
+  before_script:
+    - apt-get update
+    - apt-get install -y software-properties-common
+    - apt-get install -y rsync
+    - apt-get install -y -qq sshpass
+    - apt-get install -y autoconf file libc-dev libtool libxml2 libxml2-dev mc net-tools libssl-dev curl automake cmake g++ git libpq-dev libmagickwand-dev libzip-dev libonig-dev librabbitmq-dev libreadline-dev libcurl4-openssl-dev libmemcached-dev zlib1g-dev libicu-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev pkg-config libmagickwand-6.q16-dev libldap2-dev wget zip unzip libaio1 ssh-client zlib1g-dev --no-install-recommends
+
+    - docker-php-ext-install curl dom mbstring simplexml zip opcache gd pdo pdo_mysql sockets intl
+
+    - curl -sS https://getcomposer.org/installer -o composer-setup.php
+    - php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    - chmod +x /usr/local/bin/composer
+    - rm -rf composer-setup.php
+
+  script:
+    - ls -la
+    - composer install --no-dev --optimize-autoloader
+    - mv .env.production .env
+    - pwd
+    - shopt -s dotglob
+    - sshpass -V
+    - export SSHPASS=$SERVER_PASSWORD
+    - sshpass -e rsync --exclude '.gitlab-ci.yml' -avzh -e 'ssh -o StrictHostKeyChecking=no -p 22' "${PWD}"/* root@ip:/var/www/pixel.istream/pixel/
+    - sshpass -e ssh root@ip 'chown -R www-data:www-data /var/www/pixel.istream/pixel/storage'
+
+Stage:
+  stage: stage
+  only:
+    - stage
+  before_script:
+    - apt-get update
+    - apt-get install -y software-properties-common
+    - apt-get install -y rsync
+    - apt-get install -y -qq sshpass
+    - apt-get install -y autoconf file libc-dev libtool libxml2 libxml2-dev mc net-tools libssl-dev curl automake cmake g++ git libpq-dev libmagickwand-dev libzip-dev libonig-dev librabbitmq-dev libreadline-dev libcurl4-openssl-dev libmemcached-dev zlib1g-dev libicu-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev pkg-config libmagickwand-6.q16-dev libldap2-dev wget zip unzip libaio1 ssh-client zlib1g-dev --no-install-recommends
+
+    - docker-php-ext-install curl dom mbstring simplexml zip opcache gd pdo pdo_mysql sockets intl
+
+    - curl -sS https://getcomposer.org/installer -o composer-setup.php
+    - php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    - chmod +x /usr/local/bin/composer
+    - rm -rf composer-setup.php
+
+  script:
+    - ls -la
+    - composer install --no-dev --optimize-autoloader
+    - mv .env.stage .env
+    - pwd
+    - shopt -s dotglob
+    - sshpass -V
+    - export SSHPASS=$SERVER_PASSWORD
+    - sshpass -e rsync --exclude '.gitlab-ci.yml' -avzh -e 'ssh -o StrictHostKeyChecking=no -p 22' "${PWD}"/* root@ip:/var/www/pixel.istream.stage/pixel/
+    - sshpass -e ssh root@ip 'chown -R www-data:www-data /var/www/pixel.istream.stage/pixel/storage'
